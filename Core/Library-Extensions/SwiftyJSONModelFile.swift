@@ -38,7 +38,7 @@ struct SwiftyJSONModelFile: ModelFile, DefaultModelFileComponent {
     }
 
     func baseElementName() -> String? {
-        return nil
+        return "SwiftyJSONable"
     }
 
     func mainBodyTemplateFileName() -> String {

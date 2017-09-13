@@ -164,7 +164,10 @@ extension DefaultModelFileComponent {
   func genDecoder(_ name: String, _ type: String, _ constantName: String, _ isArray: Bool) -> String {
     let finalTypeName = isArray ? "[\(type)]" : type
     if type == VariableType.bool.rawValue {
-      return "self.\(name) = aDecoder.decodeBool(forKey: \(constantName))"
+        // 如果是bool类型，由于Swifty 3.0 decodeBool方法的bug，无法解析加密的bool字段，所以这个地方两个类型都必须考虑。
+        // 先解析object，如果失败，再解析bool
+//      return "self.\(name) = aDecoder.decodeBool(forKey: \(constantName))"
+        return "self.\(name) = aDecoder.decodeObject(forKey: \(constantName)) as? Bool ?? aDecoder.decodeBool(forKey: \(constantName))"
     }
     return "self.\(name) = aDecoder.decodeObject(forKey: \(constantName)) as? \(finalTypeName)"
   }
